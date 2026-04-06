@@ -39,8 +39,8 @@ html, body {
   background: var(--dark-bg);
   color: var(--text-primary);
   font-family: 'Nunito', system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -60,11 +60,11 @@ html, body {
 ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
 
 /* ── Typography ───────────────────────────────────────────── */
-h1 { font-size: clamp(2rem,5vw,3.5rem); font-weight: 900; line-height: 1.1; }
-h2 { font-size: clamp(1.5rem,3.5vw,2.5rem); font-weight: 800; }
-h3 { font-size: clamp(1.1rem,2.5vw,1.75rem); font-weight: 700; }
-h4 { font-size: 1.1rem; font-weight: 700; }
-p  { color: var(--text-secondary); }
+h1 { font-size: clamp(2.4rem,6vw,4rem); font-weight: 900; line-height: 1.1; }
+h2 { font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; }
+h3 { font-size: clamp(1.4rem,3vw,2rem); font-weight: 700; }
+h4 { font-size: 1.3rem; font-weight: 700; }
+p  { color: var(--text-secondary); font-size: 1.1rem; }
 
 /* ── Button system ────────────────────────────────────────── */
 .btn {
@@ -77,7 +77,7 @@ p  { color: var(--text-secondary); }
   border: none;
   border-radius: var(--radius-md);
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.18s var(--transition), box-shadow 0.18s var(--ease-out), opacity 0.15s;
@@ -132,10 +132,10 @@ p  { color: var(--text-secondary); }
   box-shadow: 0 6px 24px rgba(255,71,87,0.35);
 }
 
-.btn-lg  { min-height: 64px; font-size: 1.15rem; padding: 0 var(--sp-xl); border-radius: var(--radius-lg); }
-.btn-sm  { min-height: 44px; font-size: 0.9rem;  padding: 0 var(--sp-md); border-radius: var(--radius-sm); }
+.btn-lg  { min-height: 70px; font-size: 1.3rem;  padding: 0 var(--sp-xl); border-radius: var(--radius-lg); }
+.btn-sm  { min-height: 52px; font-size: 1rem;    padding: 0 var(--sp-md); border-radius: var(--radius-sm); }
 .btn-full { width: 100%; }
-.btn-icon { min-height: 48px; width: 48px; padding: 0; border-radius: 50%; }
+.btn-icon { min-height: 56px; width: 56px; padding: 0; border-radius: 50%; }
 
 /* ── Card system ──────────────────────────────────────────── */
 .card {
@@ -215,7 +215,7 @@ p  { color: var(--text-secondary); }
   padding: 8px 16px;
   font-weight: 800;
   color: var(--warning);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
 }
 
 /* ── Progress bar ─────────────────────────────────────────── */
@@ -248,7 +248,7 @@ p  { color: var(--text-secondary); }
   gap: 4px;
   padding: 4px 12px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   font-weight: 700;
 }
 .badge-primary { background: var(--primary-dim); color: var(--primary); border: 1px solid rgba(108,99,255,0.4); }
@@ -330,7 +330,7 @@ p  { color: var(--text-secondary); }
 .text-purple  { color: var(--primary); }
 .font-bold    { font-weight: 700; }
 .font-black   { font-weight: 900; }
-.text-sm      { font-size: 0.875rem; }
+.text-sm      { font-size: 1rem; }
 .text-lg      { font-size: 1.15rem; }
 .text-xl      { font-size: 1.35rem; }
 .w-full       { width: 100%; }
@@ -485,7 +485,7 @@ p  { color: var(--text-secondary); }
 .hp-bar-label {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-secondary);
 }
@@ -557,7 +557,7 @@ p  { color: var(--text-secondary); }
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   color: var(--primary);
   flex-shrink: 0;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
@@ -716,7 +716,7 @@ p  { color: var(--text-secondary); }
   background: var(--primary-dim);
   box-shadow: 0 0 20px var(--primary-glow);
 }
-.avatar-option span { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); }
+.avatar-option span { font-size: 0.95rem; font-weight: 700; color: var(--text-secondary); }
 
 /* ── Year card (registration) ─────────────────────────────── */
 .year-grid {
@@ -743,7 +743,7 @@ p  { color: var(--text-secondary); }
   box-shadow: 0 0 16px var(--primary-glow);
 }
 .year-card h4 { color: var(--text-primary); font-size: 1rem; }
-.year-card span { color: var(--text-secondary); font-size: 0.8rem; }
+.year-card span { color: var(--text-secondary); font-size: 0.95rem; }
 
 /* ── Onboarding steps ─────────────────────────────────────── */
 .step-indicator {
@@ -778,7 +778,7 @@ p  { color: var(--text-secondary); }
   text-align: center;
 }
 .stat-card .stat-value { font-size: 1.8rem; font-weight: 900; color: var(--text-primary); }
-.stat-card .stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+.stat-card .stat-label { font-size: 0.95rem; color: var(--text-secondary); margin-top: 4px; }
 
 /* ── Responsive containers ────────────────────────────────── */
 .container {
@@ -803,7 +803,7 @@ p  { color: var(--text-secondary); }
   border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
   padding: 6px 12px;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
   backdrop-filter: blur(8px);
 }
@@ -854,7 +854,7 @@ p  { color: var(--text-secondary); }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   font-weight: 900;
   color: #92400E;
   flex-shrink: 0;

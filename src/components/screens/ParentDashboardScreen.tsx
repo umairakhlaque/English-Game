@@ -222,7 +222,7 @@ export const ParentDashboardScreen: React.FC = () => {
           <div className="card" style={{ marginBottom: 'var(--sp-lg)' }}>
             <h4 style={{ marginBottom: 'var(--sp-sm)' }}>Questions Answered</h4>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Correct vs Total</span>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Correct vs Total</span>
               <span style={{ fontWeight: 700 }}>{stats.totalCorrect} / {stats.totalQuestionsAnswered}</span>
             </div>
             <div className="progress-track">
@@ -231,7 +231,7 @@ export const ParentDashboardScreen: React.FC = () => {
                 style={{ width: stats.totalQuestionsAnswered > 0 ? `${(stats.totalCorrect / stats.totalQuestionsAnswered) * 100}%` : '0%' }}
               />
             </div>
-            <p style={{ fontSize: '0.8rem', marginTop: 8 }}>Session time: ~{timePlayed} min</p>
+            <p style={{ fontSize: '0.95rem', marginTop: 8 }}>Session time: ~{timePlayed} min</p>
           </div>
 
           {/* Progress per Year band */}
@@ -247,8 +247,8 @@ export const ParentDashboardScreen: React.FC = () => {
               return (
                 <div key={y}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 700 }}>Year {y}</span>
-                    <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{learnedForYear}/{total} words ({pct}%)</span>
+                    <span style={{ fontSize: '1rem', fontWeight: 700 }}>Year {y}</span>
+                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>{learnedForYear}/{total} words ({pct}%)</span>
                   </div>
                   <div className="progress-track" style={{ height: 8 }}>
                     <div
@@ -272,7 +272,7 @@ export const ParentDashboardScreen: React.FC = () => {
                     <span style={{ fontSize: '1.3rem' }} aria-hidden="true">{ch.emoji}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>Ch.{ch.id}: {ch.title}</span>
+                        <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>Ch.{ch.id}: {ch.title}</span>
                         {p?.completed ? (
                           <div style={{ display: 'flex', gap: 3 }}>
                             {[1, 2, 3].map((s) => (
@@ -280,13 +280,13 @@ export const ParentDashboardScreen: React.FC = () => {
                             ))}
                           </div>
                         ) : (
-                          <span className="badge" style={{ background: 'rgba(167,169,190,0.1)', color: 'var(--text-secondary)', fontSize: '0.7rem', border: '1px solid var(--card-border)' }}>
+                          <span className="badge" style={{ background: 'rgba(167,169,190,0.1)', color: 'var(--text-secondary)', fontSize: '0.85rem', border: '1px solid var(--card-border)' }}>
                             {ch.id <= Object.values(levelProgress).filter((x) => x.completed).length + 1 ? 'Not started' : 'Locked'}
                           </span>
                         )}
                       </div>
                       {p?.completed && (
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                        <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                           Accuracy: {Math.round((p.accuracy ?? 0) * 100)}%
                         </span>
                       )}
@@ -306,7 +306,7 @@ export const ParentDashboardScreen: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: showChangeYear ? 'var(--sp-md)' : 0 }}>
                 <div>
                   <h4 style={{ marginBottom: 2 }}>Change Year Band</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Current: Year {profile.yearBand}</p>
+                  <p style={{ fontSize: '1rem', margin: 0 }}>Current: Year {profile.yearBand}</p>
                 </div>
                 <button className="btn btn-ghost btn-sm" onClick={() => setShowChangeYear(!showChangeYear)}>
                   {showChangeYear ? 'Cancel' : 'Change'}
@@ -336,7 +336,7 @@ export const ParentDashboardScreen: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sp-md)' }}>
                 <div>
                   <h4 style={{ marginBottom: 2 }}>Change Avatar</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Current: {profile.avatar}</p>
+                  <p style={{ fontSize: '1rem', margin: 0 }}>Current: {profile.avatar}</p>
                 </div>
               </div>
               <AvatarPicker selected={profile.avatar} onSelect={(av) => updateProfile({ avatar: av })} />
@@ -347,7 +347,7 @@ export const ParentDashboardScreen: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: showChangePin ? 'var(--sp-lg)' : 0 }}>
                 <div>
                   <h4 style={{ marginBottom: 2 }}>Change Parent PIN</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Update your 4-digit PIN</p>
+                  <p style={{ fontSize: '1rem', margin: 0 }}>Update your 4-digit PIN</p>
                 </div>
                 <button className="btn btn-ghost btn-sm" onClick={() => { setShowChangePin(!showChangePin); setChangePinStep('new'); setNewPin(''); setConfirmPin(''); setChangePinError(''); }}>
                   {showChangePin ? 'Cancel' : 'Change'}
@@ -360,7 +360,7 @@ export const ParentDashboardScreen: React.FC = () => {
                   ) : (
                     <PinKeypad value={confirmPin} onChange={(v) => { setConfirmPin(v); setChangePinError(''); }} label="Confirm new PIN" />
                   )}
-                  {changePinError && <p style={{ color: 'var(--danger)', fontWeight: 600, fontSize: '0.875rem' }}>{changePinError}</p>}
+                  {changePinError && <p style={{ color: 'var(--danger)', fontWeight: 600, fontSize: '1rem' }}>{changePinError}</p>}
                   <button className="btn btn-primary btn-full" onClick={handleChangePin}>
                     {changePinStep === 'new' ? 'Continue' : 'Save PIN'}
                   </button>
@@ -373,7 +373,7 @@ export const ParentDashboardScreen: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <h4 style={{ marginBottom: 2, color: 'var(--danger)' }}>Reset Progress</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Clear all game progress (keeps profile)</p>
+                  <p style={{ fontSize: '1rem', margin: 0 }}>Clear all game progress (keeps profile)</p>
                 </div>
                 <button className="btn btn-danger btn-sm" onClick={() => setShowReset(true)}>Reset</button>
               </div>

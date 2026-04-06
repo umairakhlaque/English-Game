@@ -157,7 +157,7 @@ export const BattleScreen: React.FC = () => {
           borderRadius: 'var(--radius-lg)', padding: 'var(--sp-lg)', textAlign: 'center',
           width: '100%', backdropFilter: 'blur(16px)',
         }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 8 }}>Power Spell</div>
+          <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: 8 }}>Power Spell</div>
           <div style={{
             fontSize: '2.5rem', fontWeight: 900,
             background: 'linear-gradient(135deg, var(--primary), var(--accent))',
@@ -169,7 +169,7 @@ export const BattleScreen: React.FC = () => {
             {question?.word ?? '...'}
           </div>
           {question?.wordEntry && (
-            <p style={{ margin: '8px 0 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            <p style={{ margin: '8px 0 0', fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
               {question.wordEntry.definition}
             </p>
           )}

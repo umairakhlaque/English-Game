@@ -51,7 +51,7 @@ export const WordScramble: React.FC<WordScrambleProps> = ({
       <div className="question-prompt">
         Unscramble the letters to make a word!
       </div>
-      <div style={{ fontSize: '0.9rem', color: '#6B7280', marginBottom: '12px', textAlign: 'center' }}>
+      <div style={{ fontSize: '1.05rem', color: '#6B7280', marginBottom: '12px', textAlign: 'center' }}>
         Clue: {question.wordEntry.emoji} <em>{question.wordEntry.definition}</em>
       </div>
 

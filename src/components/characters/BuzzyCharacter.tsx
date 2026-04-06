@@ -17,7 +17,7 @@ export const BuzzyCharacter: React.FC<BuzzyCharacterProps> = ({
     <div className={`flex-col flex-center ${className}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
       {says && (
         <div className="speech-bubble" style={{ maxWidth: 240, marginBottom: 8 }}>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 600, margin: 0 }}>{says}</p>
+          <p style={{ fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: 600, margin: 0 }}>{says}</p>
         </div>
       )}
       <div

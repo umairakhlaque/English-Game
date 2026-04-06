@@ -159,7 +159,7 @@ export const BossCharacter: React.FC<BossCharacterProps> = ({
         </svg>
       </div>
       {name && (
-        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--secondary)', textShadow: '0 0 8px rgba(255,101,132,0.4)' }}>{name}</span>
+        <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--secondary)', textShadow: '0 0 8px rgba(255,101,132,0.4)' }}>{name}</span>
       )}
     </div>
   );

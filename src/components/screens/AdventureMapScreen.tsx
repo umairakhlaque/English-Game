@@ -126,18 +126,18 @@ export const AdventureMapScreen: React.FC = () => {
                     {/* Content */}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-sm)', marginBottom: 4 }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: isLocked ? 'var(--text-secondary)' : color }}>
+                        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: isLocked ? 'var(--text-secondary)' : color }}>
                           Chapter {chapter.id}
                         </span>
                         {isCompleted && <CheckSVG />}
                         {isCurrent && (
-                          <span className="badge badge-primary" style={{ fontSize: '0.7rem' }}>CURRENT</span>
+                          <span className="badge badge-primary" style={{ fontSize: '0.85rem' }}>CURRENT</span>
                         )}
                       </div>
                       <h3 style={{ fontSize: '1.05rem', marginBottom: 2, color: isLocked ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
                         {chapter.title}
                       </h3>
-                      <p style={{ fontSize: '0.85rem', margin: 0 }}>{chapter.world}</p>
+                      <p style={{ fontSize: '1rem', margin: 0 }}>{chapter.world}</p>
 
                       {/* Stars */}
                       <div style={{ display: 'flex', gap: 4, marginTop: 8 }} aria-label={`${stars} stars`}>
@@ -145,7 +145,7 @@ export const AdventureMapScreen: React.FC = () => {
                           <div key={s} className={`star-icon sm${s <= stars ? ' filled' : ''}`} />
                         ))}
                         {isCompleted && progress && (
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginLeft: 8, alignSelf: 'center' }}>
+                          <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginLeft: 8, alignSelf: 'center' }}>
                             {Math.round(progress.accuracy * 100)}% accuracy
                           </span>
                         )}
@@ -164,10 +164,10 @@ export const AdventureMapScreen: React.FC = () => {
                   {!isLocked && (
                     <div style={{ marginTop: 'var(--sp-sm)', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {chapter.targetWords.slice(0, 5).map((w) => (
-                        <span key={w} className="badge badge-primary" style={{ fontSize: '0.7rem' }}>{w}</span>
+                        <span key={w} className="badge badge-primary" style={{ fontSize: '0.85rem' }}>{w}</span>
                       ))}
                       {chapter.targetWords.length > 5 && (
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>+{chapter.targetWords.length - 5} more</span>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>+{chapter.targetWords.length - 5} more</span>
                       )}
                     </div>
                   )}

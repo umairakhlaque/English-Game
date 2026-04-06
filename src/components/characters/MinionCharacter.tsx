@@ -130,7 +130,7 @@ export const MinionCharacter: React.FC<MinionCharacterProps> = ({
         </svg>
       </div>
       {name && (
-        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>{name}</span>
+        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-secondary)' }}>{name}</span>
       )}
     </div>
   );

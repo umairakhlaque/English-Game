@@ -56,7 +56,7 @@ export const Character: React.FC<CharacterProps> = ({
       {label && (
         <div
           style={{
-            fontSize: '0.75rem',
+            fontSize: '0.9rem',
             fontWeight: 700,
             color: character === 'lex' ? '#7C3AED' : '#10B981',
             marginTop: '4px',

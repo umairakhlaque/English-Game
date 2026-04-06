@@ -20,7 +20,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       {label && (
         <div
           style={{
-            fontSize: '0.85rem',
+            fontSize: '1rem',
             fontWeight: 700,
             color: '#6B7280',
             marginBottom: '4px',

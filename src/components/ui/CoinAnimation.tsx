@@ -53,7 +53,7 @@ export const CoinAnimation: React.FC<CoinAnimationProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '0.6rem',
+          fontSize: '0.8rem',
           fontWeight: 900,
           color: '#92400E',
           fontFamily: 'inherit',

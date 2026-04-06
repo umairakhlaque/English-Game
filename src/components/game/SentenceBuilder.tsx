@@ -48,7 +48,7 @@ export const SentenceBuilder: React.FC<SentenceBuilderProps> = ({
   return (
     <div className="question-container">
       <div className="question-prompt">Build the sentence in the right order!</div>
-      <div style={{ fontSize: '0.9rem', color: '#6B7280', marginBottom: '12px', textAlign: 'center' }}>
+      <div style={{ fontSize: '1.05rem', color: '#6B7280', marginBottom: '12px', textAlign: 'center' }}>
         Use the word: <strong style={{ color: '#7C3AED' }}>{question.word}</strong>
       </div>
 

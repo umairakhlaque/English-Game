@@ -40,7 +40,7 @@ export const Enemy: React.FC<EnemyProps> = ({
       <div style={{ fontSize: fontSize[size], lineHeight: 1 }}>{emoji}</div>
       <div
         style={{
-          fontSize: '0.75rem',
+          fontSize: '0.9rem',
           fontWeight: 700,
           color: '#EC4899',
           marginTop: '4px',

@@ -28,7 +28,7 @@ export const PinKeypad: React.FC<PinKeypadProps> = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--sp-md)' }}>
       {label && (
-        <p style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '0.95rem', marginBottom: 4 }}>{label}</p>
+        <p style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '1.1rem', marginBottom: 4 }}>{label}</p>
       )}
       {/* PIN dots */}
       <div className="pin-dots" role="status" aria-label={`${value.length} of ${maxLength} digits entered`}>

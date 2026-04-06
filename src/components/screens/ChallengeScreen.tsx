@@ -107,7 +107,7 @@ export const ChallengeScreen: React.FC = () => {
               aria-label={`Question ${currentQuestionIndex + 1} of ${total}`}
             />
           </div>
-          <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+          <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: 4 }}>
             {currentQuestionIndex + 1} / {total}
           </div>
         </div>
@@ -153,13 +153,23 @@ export const ChallengeScreen: React.FC = () => {
 
           {/* Question card */}
           <div className="card card-glow" style={{ marginBottom: 'var(--sp-md)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-sm)', marginBottom: 'var(--sp-sm)' }}>
-              <span className="badge badge-primary">{question.type === 'cloze' ? 'Fill the Blank' : question.type === 'multipleChoice' ? 'Multiple Choice' : question.type === 'wordScramble' ? 'Unscramble' : 'Build It'}</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Word: <strong style={{ color: 'var(--text-primary)' }}>{question.word}</strong></span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-sm)', marginBottom: 'var(--sp-md)' }}>
+              <span className="badge badge-primary">
+                {question.type === 'cloze' ? 'Fill the Blank'
+                  : question.type === 'multipleChoice' ? 'Multiple Choice'
+                  : question.type === 'wordScramble' ? 'Unscramble'
+                  : 'Build It'}
+              </span>
             </div>
 
-            {/* Sentence / question */}
-            {question.sentence && (
+            {/* Type-specific prompt — never reveals the answer */}
+            {question.type === 'multipleChoice' && (
+              <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 var(--sp-sm)' }}>
+                Which word means: <em style={{ color: 'var(--warning)' }}>"{question.wordEntry.definition}"</em>?
+              </p>
+            )}
+
+            {question.type === 'cloze' && question.sentence && (
               <p style={{
                 fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--text-primary)',
                 fontWeight: 600, margin: '0 0 var(--sp-sm)',
@@ -168,19 +178,28 @@ export const ChallengeScreen: React.FC = () => {
                 {question.sentence}
               </p>
             )}
+
             {question.type === 'wordScramble' && question.scrambled && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 'var(--sp-sm)' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', width: '100%' }}>Unscramble these letters:</span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', width: '100%', marginBottom: 8 }}>
+                  Unscramble these letters to make a word:
+                </span>
                 {question.scrambled.map((letter, i) => (
                   <div key={i} style={{
-                    width: 44, height: 44, borderRadius: 10, background: 'var(--primary-dim)',
+                    width: 48, height: 48, borderRadius: 10, background: 'var(--primary-dim)',
                     border: '2px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '1.3rem', fontWeight: 900, color: 'var(--primary)',
+                    fontSize: '1.4rem', fontWeight: 900, color: 'var(--primary)',
                   }}>
                     {letter.toUpperCase()}
                   </div>
                 ))}
               </div>
+            )}
+
+            {question.type === 'sentenceBuilder' && question.sentenceWords && (
+              <p style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                Put these words in the correct order to make a sentence:
+              </p>
             )}
           </div>
 
@@ -245,7 +264,7 @@ export const ChallengeScreen: React.FC = () => {
               <p style={{ color: 'var(--danger)', fontWeight: 800, fontSize: '1rem', margin: 0 }}>
                 Not quite! The answer was: <strong>{question.correctAnswer}</strong>
               </p>
-              <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0', fontSize: '0.875rem' }}>
+              <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0', fontSize: '1rem' }}>
                 {question.hint}
               </p>
             </div>

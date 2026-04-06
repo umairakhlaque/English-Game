@@ -106,7 +106,7 @@ export const MagicDictionaryScreen: React.FC = () => {
               </div>
 
               {/* Results count */}
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 'var(--sp-md)' }}>
+              <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: 'var(--sp-md)' }}>
                 {filtered.length} {filtered.length === 1 ? 'word' : 'words'}
                 {search ? ` matching "${search}"` : ''}
               </p>
@@ -130,7 +130,7 @@ export const MagicDictionaryScreen: React.FC = () => {
                         <span
                           className="badge"
                           style={{
-                            fontSize: '0.7rem',
+                            fontSize: '0.85rem',
                             background: `${YEAR_COLORS[entry.yearBand]}22`,
                             color: YEAR_COLORS[entry.yearBand],
                             border: `1px solid ${YEAR_COLORS[entry.yearBand]}44`,
@@ -140,10 +140,10 @@ export const MagicDictionaryScreen: React.FC = () => {
                           Y{entry.yearBand}
                         </span>
                       </div>
-                      <p style={{ fontSize: '0.875rem', marginBottom: 8 }}>{entry.definition}</p>
+                      <p style={{ fontSize: '1rem', marginBottom: 8 }}>{entry.definition}</p>
                       {entry.exampleSentence && (
                         <p style={{
-                          fontSize: '0.8rem', color: 'var(--text-secondary)',
+                          fontSize: '0.95rem', color: 'var(--text-secondary)',
                           fontStyle: 'italic', borderLeft: `3px solid ${YEAR_COLORS[entry.yearBand]}`,
                           paddingLeft: 10, margin: 0,
                         }}>

@@ -85,7 +85,7 @@ export const StoryScreen: React.FC = () => {
               borderRadius: 999, padding: '8px 20px',
             }}>
               <span style={{ fontSize: '1.5rem' }} aria-hidden="true">{chapter.emoji}</span>
-              <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{chapter.world}</span>
+              <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.1rem' }}>{chapter.world}</span>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ export const StoryScreen: React.FC = () => {
 
               {/* Highlighted words legend */}
               <div>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 8 }}>
+                <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: 8 }}>
                   Words to master in this chapter:
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -156,7 +156,7 @@ export const StoryScreen: React.FC = () => {
                     style={{ justifyContent: 'flex-start', textAlign: 'left' }}
                     onClick={() => setRevealed(true)}
                   >
-                    <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--primary-dim)', border: '2px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 800, color: 'var(--primary)', flexShrink: 0 }}>
+                    <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--primary-dim)', border: '2px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.95rem', fontWeight: 800, color: 'var(--primary)', flexShrink: 0 }}>
                       {String.fromCharCode(65 + i)}
                     </span>
                     {opt.text}

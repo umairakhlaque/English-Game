@@ -139,7 +139,7 @@ export const VictoryScreen: React.FC = () => {
                   borderRadius: 'var(--radius-sm)', padding: '8px 12px',
                 }}>
                   <span style={{ fontWeight: 900, color: 'var(--accent)' }}>{entry.word}</span>
-                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>— {entry.definition}</span>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>— {entry.definition}</span>
                 </div>
               ))}
             </div>
@@ -148,7 +148,7 @@ export const VictoryScreen: React.FC = () => {
 
         {/* Total stats row */}
         <div style={{ width: '100%', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
             Total words learned: <strong style={{ color: 'var(--accent)' }}>{stats.totalWordsLearned}</strong>
           </p>
         </div>

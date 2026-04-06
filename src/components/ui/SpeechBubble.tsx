@@ -34,7 +34,7 @@ export const SpeechBubble: React.FC<SpeechBubbleProps> = ({
       }}
     >
       {emoji && <span style={{ marginRight: '6px', fontSize: '1.1rem' }}>{emoji}</span>}
-      <span style={{ color: c.text, fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.4 }}>
+      <span style={{ color: c.text, fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.4 }}>
         {text}
       </span>
       {/* Tail */}

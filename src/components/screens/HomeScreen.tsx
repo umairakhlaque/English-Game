@@ -84,7 +84,7 @@ export const HomeScreen: React.FC = () => {
             <h3 style={{ marginBottom: 'var(--sp-xs)' }}>
               Welcome back, <span style={{ color: 'var(--primary)' }}>{profile.name}</span>!
             </h3>
-            <p style={{ marginBottom: 'var(--sp-lg)', fontSize: '0.95rem' }}>
+            <p style={{ marginBottom: 'var(--sp-lg)', fontSize: '1.1rem' }}>
               Ready to continue your adventure?
             </p>
             <div className="stats-grid" style={{ marginBottom: 'var(--sp-lg)' }}>
@@ -219,7 +219,7 @@ export const HomeScreen: React.FC = () => {
                     style={{ fontSize: '1.3rem', textAlign: 'center' }}
                   />
                   {nameError && (
-                    <p style={{ color: 'var(--danger)', fontSize: '0.875rem', marginTop: 8, fontWeight: 600 }}>{nameError}</p>
+                    <p style={{ color: 'var(--danger)', fontSize: '1rem', marginTop: 8, fontWeight: 600 }}>{nameError}</p>
                   )}
                 </div>
                 <button className="btn btn-primary btn-lg btn-full" onClick={handleNameNext}>Next</button>
@@ -238,7 +238,7 @@ export const HomeScreen: React.FC = () => {
                     <button key={y} className={`year-card${yearBand === y ? ' selected' : ''}`} onClick={() => setYearBand(y)} type="button">
                       <h4>Year {y}</h4>
                       <span>{YEAR_AGES[y]}</span>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: 4 }}>{YEAR_DESCRIPTIONS[y]}</div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 4 }}>{YEAR_DESCRIPTIONS[y]}</div>
                     </button>
                   ))}
                 </div>
@@ -272,7 +272,7 @@ export const HomeScreen: React.FC = () => {
                   <p style={{ maxWidth: 300 }}>Set a secret 4-digit PIN so parents can access the dashboard.</p>
                 </div>
                 <PinKeypad value={pin} onChange={(v) => { setPin(v); setPinError(''); }} label="Create a 4-digit PIN" />
-                {pinError && <p style={{ color: 'var(--danger)', fontSize: '0.875rem', fontWeight: 600 }}>{pinError}</p>}
+                {pinError && <p style={{ color: 'var(--danger)', fontSize: '1rem', fontWeight: 600 }}>{pinError}</p>}
                 <div style={{ display: 'flex', gap: 'var(--sp-md)', width: '100%' }}>
                   <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => goToStep('avatar')}>Back</button>
                   <button className="btn btn-primary" style={{ flex: 2 }} onClick={handlePinNext} disabled={pin.length < 4}>Next</button>
@@ -288,7 +288,7 @@ export const HomeScreen: React.FC = () => {
                   <p>Enter the same PIN again to confirm.</p>
                 </div>
                 <PinKeypad value={confirmPin} onChange={(v) => { setConfirmPin(v); setPinError(''); }} label="Confirm PIN" />
-                {pinError && <p style={{ color: 'var(--danger)', fontSize: '0.875rem', fontWeight: 600 }}>{pinError}</p>}
+                {pinError && <p style={{ color: 'var(--danger)', fontSize: '1rem', fontWeight: 600 }}>{pinError}</p>}
                 <div style={{ display: 'flex', gap: 'var(--sp-md)', width: '100%' }}>
                   <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => { goToStep('pin'); setPin(''); setConfirmPin(''); }}>Back</button>
                   <button className="btn btn-accent" style={{ flex: 2 }} onClick={handleConfirmPin} disabled={confirmPin.length < 4}>
