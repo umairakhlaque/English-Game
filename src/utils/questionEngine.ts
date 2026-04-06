@@ -107,15 +107,17 @@ export function generateMultipleChoiceQuestion(wordEntry: WordEntry, allWords: W
   };
 }
 
-export function generateWordScrambleQuestion(wordEntry: WordEntry, _allWords: WordEntry[]): Question {
+export function generateWordScrambleQuestion(wordEntry: WordEntry, allWords: WordEntry[]): Question {
   const scrambled = scrambleWord(wordEntry.word);
+  const distractors = getDistractors(wordEntry, 2, allWords);
+  const options = shuffle([wordEntry.word, ...distractors.map((d) => d.word)]);
 
   return {
     id: nextId(),
     type: 'wordScramble',
     word: wordEntry.word,
     scrambled,
-    options: [wordEntry.word],
+    options,
     correctAnswer: wordEntry.word,
     hint: `The word has ${wordEntry.word.length} letters and means: "${wordEntry.definition}" 🔤`,
     buzzySays: `Buzzy says: rearrange the letters to spell a word that means "${wordEntry.definition}"! First letter is "${wordEntry.word[0].toUpperCase()}" 🐛`,

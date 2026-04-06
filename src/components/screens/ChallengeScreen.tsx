@@ -6,6 +6,7 @@ import { MinionCharacter } from '../characters/MinionCharacter';
 import { BuzzyCharacter } from '../characters/BuzzyCharacter';
 import { HPBar } from '../ui/HPBar';
 import { CoinAnimation } from '../ui/CoinAnimation';
+import { SentenceBuilder } from '../game/SentenceBuilder';
 
 const LABELS = ['A', 'B', 'C', 'D'];
 
@@ -203,33 +204,44 @@ export const ChallengeScreen: React.FC = () => {
             )}
           </div>
 
-          {/* Answer options */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-sm)', marginBottom: 'var(--sp-md)' }}>
-            {question.options.map((option, i) => (
-              <button
-                key={`${question.id}-${i}`}
-                className={getCardClass(option)}
-                onClick={() => handleAnswer(option)}
+          {/* Answer options — sentence builder gets its own interactive component */}
+          {question.type === 'sentenceBuilder' ? (
+            <div style={{ marginBottom: 'var(--sp-md)' }}>
+              <SentenceBuilder
+                question={question}
+                onAnswer={handleAnswer}
+                result={currentAnswerResult}
                 disabled={currentAnswerResult !== null}
-                aria-label={`Option ${LABELS[i]}: ${option}`}
-              >
-                <div className="answer-label">{LABELS[i]}</div>
-                <span className="answer-text">{option}</span>
-                {currentAnswerResult !== null && option === question.correctAnswer && (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
-                    <circle cx="10" cy="10" r="10" fill="#43E97B" />
-                    <path d="M5 10 L8.5 13.5 L15 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-                {currentAnswerResult === 'wrong' && option === currentChosenAnswer && (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
-                    <circle cx="10" cy="10" r="10" fill="#FF4757" />
-                    <path d="M7 7 L13 13 M13 7 L7 13" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                )}
-              </button>
-            ))}
-          </div>
+              />
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-sm)', marginBottom: 'var(--sp-md)' }}>
+              {question.options.slice(0, 3).map((option, i) => (
+                <button
+                  key={`${question.id}-${i}`}
+                  className={getCardClass(option)}
+                  onClick={() => handleAnswer(option)}
+                  disabled={currentAnswerResult !== null}
+                  aria-label={`Option ${LABELS[i]}: ${option}`}
+                >
+                  <div className="answer-label">{LABELS[i]}</div>
+                  <span className="answer-text">{option}</span>
+                  {currentAnswerResult !== null && option === question.correctAnswer && (
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
+                      <circle cx="10" cy="10" r="10" fill="#43E97B" />
+                      <path d="M5 10 L8.5 13.5 L15 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                  {currentAnswerResult === 'wrong' && option === currentChosenAnswer && (
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
+                      <circle cx="10" cy="10" r="10" fill="#FF4757" />
+                      <path d="M7 7 L13 13 M13 7 L7 13" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Hint + Buzzy */}
           <div style={{ marginBottom: 'var(--sp-md)' }}>
