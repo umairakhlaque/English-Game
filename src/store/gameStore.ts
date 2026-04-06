@@ -155,7 +155,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       chapter.targetWords,
       5,
       accuracy,
-      get().profile.yearBand
+      get().profile.yearBand as import('../types').YearBand
     );
 
     set({

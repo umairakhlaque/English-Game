@@ -1,173 +1,263 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useGameStore } from '../../store/gameStore';
-import { useGameEngine } from '../../hooks/useGameEngine';
 import { storyChapters } from '../../data/story';
-import { Character } from '../ui/Character';
-import { Enemy } from '../ui/Enemy';
-import { SpeechBubble } from '../ui/SpeechBubble';
-import { ProgressBar } from '../ui/ProgressBar';
-import { WordCoin } from '../ui/WordCoin';
-import { MultipleChoice } from '../game/MultipleChoice';
-import { ClozeQuestion } from '../game/ClozeQuestion';
-import { WordScramble } from '../game/WordScramble';
-import { SentenceBuilder } from '../game/SentenceBuilder';
+import { LexCharacter } from '../characters/LexCharacter';
+import { MinionCharacter } from '../characters/MinionCharacter';
+import { BuzzyCharacter } from '../characters/BuzzyCharacter';
+import { HPBar } from '../ui/HPBar';
+import { CoinAnimation } from '../ui/CoinAnimation';
+
+const LABELS = ['A', 'B', 'C', 'D'];
 
 export const ChallengeScreen: React.FC = () => {
   const {
-    currentChapterId,
-    currentQuestionIndex,
-    currentQuestions,
-    wordCoins,
-    showBuzzyHint,
-    currentAnswerResult,
-    currentChosenAnswer,
-    toggleBuzzyHint,
-    setScreen,
-    handleAnswerSubmit,
-    handleNextAfterResult,
-    currentQuestion,
-    speakText,
-  } = useGameEngine();
+    currentChapterId, currentQuestions, currentQuestionIndex,
+    currentAnswerResult, currentChosenAnswer, showBuzzyHint,
+    submitAnswer, nextQuestion, toggleBuzzyHint, setScreen,
+    wordCoins, chapterSessionCorrect, chapterSessionTotal,
+    battleAnimating,
+  } = useGameStore();
+
+  const [shaking, setShaking] = useState(false);
+  const [showCoin, setShowCoin] = useState(false);
+  const [lexSwing, setLexSwing] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const chapter = storyChapters.find((c) => c.id === currentChapterId);
+  const question = currentQuestions[currentQuestionIndex];
+  const total = currentQuestions.length;
+
+  // HP calculations
+  const enemyMaxHP = total * 10;
+  const enemyCurrentHP = Math.max(0, enemyMaxHP - (chapterSessionCorrect * 10));
+  const heroMaxHP = 100;
+  const heroCurrentHP = Math.max(0, heroMaxHP - ((chapterSessionTotal - chapterSessionCorrect) * 20));
 
   useEffect(() => {
-    if (currentQuestion?.word) {
-      // Auto-read prompt for accessibility
-    }
-  }, [currentQuestion]);
+    setSubmitted(false);
+  }, [currentQuestionIndex]);
 
-  if (!chapter || !currentQuestion) {
+  useEffect(() => {
+    if (currentAnswerResult === 'wrong') {
+      setShaking(true);
+      const t = setTimeout(() => setShaking(false), 600);
+      return () => clearTimeout(t);
+    }
+    if (currentAnswerResult === 'correct') {
+      setShowCoin(true);
+      setLexSwing(true);
+      const t1 = setTimeout(() => setShowCoin(false), 1200);
+      const t2 = setTimeout(() => setLexSwing(false), 600);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
+    }
+  }, [currentAnswerResult]);
+
+  useEffect(() => {
+    if (battleAnimating) {
+      const t = setTimeout(() => setScreen('battle'), 400);
+      return () => clearTimeout(t);
+    }
+  }, [battleAnimating, setScreen]);
+
+  const handleAnswer = useCallback((answer: string) => {
+    if (submitted || currentAnswerResult !== null) return;
+    setSubmitted(true);
+    submitAnswer(answer);
+  }, [submitted, currentAnswerResult, submitAnswer]);
+
+  const handleNext = () => {
+    nextQuestion();
+  };
+
+  if (!question || !chapter) {
     return (
-      <div className="challenge-screen">
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <div style={{ fontSize: '3rem' }}>🎉</div>
-          <p>Loading challenge...</p>
-          <button className="btn-primary" onClick={() => setScreen('map')}>
-            Back to Map
-          </button>
-        </div>
+      <div className="screen flex-center">
+        <p>Loading challenge...</p>
       </div>
     );
   }
 
-  const isAnswered = !!currentAnswerResult;
-  const lexState = currentAnswerResult === 'correct' ? 'attack' : currentAnswerResult === 'wrong' ? 'hurt' : showBuzzyHint ? 'think' : 'idle';
-  const enemyState = currentAnswerResult === 'correct' ? 'hurt' : 'idle';
-
-  const renderQuestion = () => {
-    const props = {
-      question: currentQuestion,
-      onAnswer: handleAnswerSubmit,
-      chosenAnswer: currentChosenAnswer,
-      result: currentAnswerResult,
-      disabled: isAnswered,
-    };
-
-    switch (currentQuestion.type) {
-      case 'cloze':
-        return <ClozeQuestion {...props} />;
-      case 'multipleChoice':
-        return <MultipleChoice {...props} />;
-      case 'wordScramble':
-        return <WordScramble {...props} result={currentAnswerResult} disabled={isAnswered} />;
-      case 'sentenceBuilder':
-        return <SentenceBuilder {...props} result={currentAnswerResult} disabled={isAnswered} />;
-      default:
-        return <MultipleChoice {...props} />;
-    }
+  const getCardClass = (option: string) => {
+    let cls = 'answer-card';
+    if (currentAnswerResult === null) return cls;
+    if (option === question.correctAnswer) return cls + ' correct';
+    if (option === currentChosenAnswer && currentAnswerResult === 'wrong') return cls + ' wrong';
+    return cls;
   };
 
   return (
-    <div className="challenge-screen">
+    <div className={`screen screen-gradient${shaking ? ' anim-shake' : ''}`}>
+      <CoinAnimation trigger={showCoin} count={5} originX={window.innerWidth * 0.7} originY={200} />
+
       {/* Top bar */}
-      <div className="challenge-topbar">
-        <button className="back-btn" onClick={() => setScreen('map')}>
-          ✕
+      <div className="topbar">
+        <button className="btn btn-ghost btn-sm" onClick={() => setScreen('map')} aria-label="Back to map">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
         </button>
-
-        <ProgressBar
-          current={currentQuestionIndex + (isAnswered ? 1 : 0)}
-          total={currentQuestions.length}
-          color="#7C3AED"
-          label={`Question ${currentQuestionIndex + 1}/${currentQuestions.length}`}
-        />
-
-        <WordCoin count={wordCoins} />
-      </div>
-
-      {/* Battle area */}
-      <div className="challenge-battle-area">
-        <div className="battle-lex">
-          <Character character="lex" state={lexState} size="medium" label="Lex" />
-        </div>
-
-        <div className="battle-center">
-          <div className="battle-chapter-info">
-            {chapter.emoji} {chapter.title}
+        <div style={{ flex: 1, maxWidth: 240 }}>
+          <div className="progress-track" style={{ height: 8 }}>
+            <div
+              className="progress-fill"
+              style={{ width: `${((currentQuestionIndex) / total) * 100}%` }}
+              role="progressbar"
+              aria-valuenow={currentQuestionIndex}
+              aria-valuemax={total}
+              aria-label={`Question ${currentQuestionIndex + 1} of ${total}`}
+            />
           </div>
-          <div className="battle-vs">⚔️</div>
+          <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+            {currentQuestionIndex + 1} / {total}
+          </div>
         </div>
-
-        <div className="battle-enemy">
-          <Enemy
-            emoji={chapter.minionEmoji}
-            name={chapter.minionName}
-            state={enemyState}
-            size="medium"
-          />
+        <div className="coin-counter" aria-label={`${wordCoins} word coins`}>
+          <div className="coin" aria-hidden="true">W</div>
+          {wordCoins}
         </div>
       </div>
 
-      {/* Question area */}
-      <div className="challenge-question-area">
-        {renderQuestion()}
+      <div className="scroll-content">
+        <div className="container" style={{ maxWidth: 700 }}>
+
+          {/* Battle arena */}
+          <div className="card" style={{ marginBottom: 'var(--sp-md)', padding: 'var(--sp-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 'var(--sp-lg)' }}>
+              {/* Lex side */}
+              <div style={{ flex: 1 }}>
+                <HPBar current={heroCurrentHP} max={heroMaxHP} label="Lex" variant="hero" />
+                <div style={{ textAlign: 'center', marginTop: 'var(--sp-sm)' }}>
+                  <LexCharacter size={90} animate={false} swinging={lexSwing} />
+                </div>
+              </div>
+
+              {/* VS */}
+              <div style={{ flexShrink: 0, textAlign: 'center' }}>
+                <span style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--secondary)', textShadow: '0 0 8px rgba(255,101,132,0.5)' }}>VS</span>
+              </div>
+
+              {/* Enemy side */}
+              <div style={{ flex: 1 }}>
+                <HPBar current={enemyCurrentHP} max={enemyMaxHP} label={chapter.minionName} variant="enemy" />
+                <div style={{ textAlign: 'center', marginTop: 'var(--sp-sm)' }}>
+                  <MinionCharacter
+                    size={90}
+                    name=""
+                    animate={false}
+                    wiggling={currentAnswerResult === 'wrong'}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Question card */}
+          <div className="card card-glow" style={{ marginBottom: 'var(--sp-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-sm)', marginBottom: 'var(--sp-sm)' }}>
+              <span className="badge badge-primary">{question.type === 'cloze' ? 'Fill the Blank' : question.type === 'multipleChoice' ? 'Multiple Choice' : question.type === 'wordScramble' ? 'Unscramble' : 'Build It'}</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Word: <strong style={{ color: 'var(--text-primary)' }}>{question.word}</strong></span>
+            </div>
+
+            {/* Sentence / question */}
+            {question.sentence && (
+              <p style={{
+                fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--text-primary)',
+                fontWeight: 600, margin: '0 0 var(--sp-sm)',
+                borderLeft: '3px solid var(--primary)', paddingLeft: 'var(--sp-sm)',
+              }}>
+                {question.sentence}
+              </p>
+            )}
+            {question.type === 'wordScramble' && question.scrambled && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 'var(--sp-sm)' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', width: '100%' }}>Unscramble these letters:</span>
+                {question.scrambled.map((letter, i) => (
+                  <div key={i} style={{
+                    width: 44, height: 44, borderRadius: 10, background: 'var(--primary-dim)',
+                    border: '2px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '1.3rem', fontWeight: 900, color: 'var(--primary)',
+                  }}>
+                    {letter.toUpperCase()}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Answer options */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-sm)', marginBottom: 'var(--sp-md)' }}>
+            {question.options.map((option, i) => (
+              <button
+                key={`${question.id}-${i}`}
+                className={getCardClass(option)}
+                onClick={() => handleAnswer(option)}
+                disabled={currentAnswerResult !== null}
+                aria-label={`Option ${LABELS[i]}: ${option}`}
+              >
+                <div className="answer-label">{LABELS[i]}</div>
+                <span className="answer-text">{option}</span>
+                {currentAnswerResult !== null && option === question.correctAnswer && (
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
+                    <circle cx="10" cy="10" r="10" fill="#43E97B" />
+                    <path d="M5 10 L8.5 13.5 L15 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+                {currentAnswerResult === 'wrong' && option === currentChosenAnswer && (
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
+                    <circle cx="10" cy="10" r="10" fill="#FF4757" />
+                    <path d="M7 7 L13 13 M13 7 L7 13" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Hint + Buzzy */}
+          <div style={{ marginBottom: 'var(--sp-md)' }}>
+            {!showBuzzyHint ? (
+              <button className="btn btn-ghost btn-sm" onClick={toggleBuzzyHint} style={{ gap: 8 }}>
+                <BuzzyCharacter size={28} animate={false} />
+                Ask Buzzy for a hint
+              </button>
+            ) : (
+              <div className="anim-slide-up-full">
+                <BuzzyCharacter size={60} animate says={question.buzzySays} />
+              </div>
+            )}
+          </div>
+
+          {/* Result feedback */}
+          {currentAnswerResult === 'correct' && (
+            <div className="anim-bounce-in" style={{
+              background: 'rgba(67,233,123,0.15)', border: '2px solid var(--accent)',
+              borderRadius: 'var(--radius-md)', padding: 'var(--sp-md)', textAlign: 'center', marginBottom: 'var(--sp-md)',
+            }}>
+              <p style={{ color: 'var(--accent)', fontWeight: 800, fontSize: '1.1rem', margin: 0 }}>
+                Excellent! +10 coins!
+              </p>
+            </div>
+          )}
+          {currentAnswerResult === 'wrong' && (
+            <div className="anim-scale-pop" style={{
+              background: 'rgba(255,71,87,0.1)', border: '2px solid var(--danger)',
+              borderRadius: 'var(--radius-md)', padding: 'var(--sp-md)', textAlign: 'center', marginBottom: 'var(--sp-md)',
+            }}>
+              <p style={{ color: 'var(--danger)', fontWeight: 800, fontSize: '1rem', margin: 0 }}>
+                Not quite! The answer was: <strong>{question.correctAnswer}</strong>
+              </p>
+              <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0', fontSize: '0.875rem' }}>
+                {question.hint}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Feedback bar */}
-      {currentAnswerResult && (
-        <div className={`answer-feedback ${currentAnswerResult === 'correct' ? 'feedback-correct-bar' : 'feedback-wrong-bar'}`}>
-          <span className="feedback-icon">{currentAnswerResult === 'correct' ? '✅' : '❌'}</span>
-          <span className="feedback-text">
-            {currentAnswerResult === 'correct'
-              ? `Brilliant! +10 coins 🪙`
-              : `The answer was: "${currentQuestion.correctAnswer}"`}
-          </span>
-          <button className="feedback-continue-btn" onClick={handleNextAfterResult}>
-            {currentAnswerResult === 'correct' ? 'Battle! →' : 'Next →'}
-          </button>
-        </div>
-      )}
-
-      {/* Buzzy hint area */}
-      {showBuzzyHint && !currentAnswerResult && (
-        <div className="buzzy-hint-box">
-          <Character character="buzzy" state="think" size="small" />
-          <SpeechBubble
-            text={currentQuestion.buzzySays}
-            speaker="buzzy"
-            direction="left"
-          />
-        </div>
-      )}
-
-      {/* Bottom bar */}
-      {!currentAnswerResult && (
-        <div className="challenge-bottom">
-          <button
-            className="hint-btn"
-            onClick={toggleBuzzyHint}
-            aria-label="Get a hint from Buzzy"
-          >
-            {showBuzzyHint ? '🐛 Hide Hint' : '🐛 Buzzy Hint'}
-          </button>
-
-          <button
-            className="speak-btn"
-            onClick={() => speakText(currentQuestion.word)}
-            aria-label="Hear the word"
-          >
-            🔊 Hear Word
+      {/* Sticky bottom: Continue */}
+      {currentAnswerResult !== null && (
+        <div className="sticky-bottom anim-slide-up-full">
+          <button className="btn btn-primary btn-lg btn-full" onClick={handleNext}>
+            {currentQuestionIndex < currentQuestions.length - 1 ? 'Next Question' : 'Finish Chapter'}
           </button>
         </div>
       )}

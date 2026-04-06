@@ -1,4 +1,4 @@
-import { WordEntry, Question, QuestionType } from '../types';
+import { WordEntry, Question, QuestionType, YearBand } from '../types';
 import { wordData } from '../data/words';
 
 let questionIdCounter = 0;
@@ -9,7 +9,6 @@ const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
 const scrambleWord = (word: string): string[] => {
   const letters = word.split('');
   let scrambled = shuffle(letters);
-  // Ensure it's actually different from the original for words > 2 chars
   let attempts = 0;
   while (scrambled.join('') === word && word.length > 2 && attempts < 20) {
     scrambled = shuffle(letters);
@@ -18,39 +17,46 @@ const scrambleWord = (word: string): string[] => {
   return scrambled;
 };
 
+/**
+ * Get plausible distractors: same year band, similar length and start letter preferred.
+ */
 const getDistractors = (correctWord: WordEntry, count: number, allWords: WordEntry[]): WordEntry[] => {
-  const sameYear = allWords.filter(
-    (w) => w.yearBand === correctWord.yearBand && w.word !== correctWord.word
-  );
-  const pool =
-    sameYear.length >= count
-      ? sameYear
-      : allWords.filter((w) => w.word !== correctWord.word);
-  return shuffle(pool).slice(0, count);
+  const pool = allWords.filter((w) => w.word !== correctWord.word);
+
+  // Score by similarity (same year = +3, similar length ±2 = +2, same start letter = +2)
+  const scored = pool.map((w) => {
+    let score = Math.random(); // base noise
+    if (w.yearBand === correctWord.yearBand) score += 3;
+    if (Math.abs(w.word.length - correctWord.word.length) <= 2) score += 2;
+    if (w.word[0].toLowerCase() === correctWord.word[0].toLowerCase()) score += 2;
+    return { w, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, count).map((s) => s.w);
 };
 
 const clozeTemplates = [
-  (word: string, def: string) => ({
-    sentence: `The traveller needed to _____ the ancient scroll. It means: "${def}".`,
-    prompt: `Fill in the blank: The traveller needed to _____ the ancient scroll.`,
+  (_word: string, _def: string, example: string) => ({
+    sentence: example.replace(
+      new RegExp(`\\b${_word}\\b`, 'gi'),
+      '_____'
+    ),
+    prompt: `Fill in the blank:`,
   }),
-  (word: string, def: string) => ({
-    sentence: `In the land of Linguara, the word "_____ " means ${def}.`,
-    prompt: `Which word means: "${def}"?`,
+  (_word: string, def: string) => ({
+    sentence: `In the land of Linguara, a word that means "${def}" is: _____`,
+    prompt: `Which word fits?`,
   }),
-  (word: string, def: string) => ({
-    sentence: `Lex wrote the word _____ in the magic book. It means ${def}.`,
-    prompt: `Which word means: "${def}"?`,
-  }),
-  (word: string, def: string) => ({
-    sentence: `Buzzy said, "This word, _____, is very important! It means ${def}."`,
-    prompt: `What word did Buzzy say?`,
+  (_word: string, def: string) => ({
+    sentence: `Buzzy says: "I know a word! It means '${def}'. The word is: _____ "`,
+    prompt: `What word is Buzzy thinking of?`,
   }),
 ];
 
 export function generateClozeQuestion(wordEntry: WordEntry, allWords: WordEntry[]): Question {
-  const template = clozeTemplates[Math.floor(Math.random() * clozeTemplates.length)];
-  const { prompt } = template(wordEntry.word, wordEntry.definition);
+  const tmpl = clozeTemplates[Math.floor(Math.random() * clozeTemplates.length)];
+  const { sentence, prompt } = tmpl(wordEntry.word, wordEntry.definition, wordEntry.exampleSentence);
   const distractors = getDistractors(wordEntry, 2, allWords);
   const options = shuffle([wordEntry.word, ...distractors.map((d) => d.word)]);
 
@@ -58,22 +64,17 @@ export function generateClozeQuestion(wordEntry: WordEntry, allWords: WordEntry[
     id: nextId(),
     type: 'cloze',
     word: wordEntry.word,
-    sentence: wordEntry.exampleSentence.replace(
-      new RegExp(`\\b${wordEntry.word}\\b`, 'i'),
-      '_____'
-    ),
+    sentence,
     options,
     correctAnswer: wordEntry.word,
-    hint: `Think about: ${wordEntry.definition}`,
-    buzzySays: `Psst! This word means "${wordEntry.definition}". Look at the example: "${wordEntry.exampleSentence}"`,
+    hint: `Think: ${wordEntry.definition}`,
+    buzzySays: `Psst! This word means "${wordEntry.definition}". Example: "${wordEntry.exampleSentence}"`,
     wordEntry,
   };
 }
 
 export function generateMultipleChoiceQuestion(wordEntry: WordEntry, allWords: WordEntry[]): Question {
   const distractors = getDistractors(wordEntry, 2, allWords);
-
-  // Randomly pick: "which word means X" or "what does X mean"
   const isDefinitionQuestion = Math.random() > 0.5;
 
   let prompt: string;
@@ -96,8 +97,8 @@ export function generateMultipleChoiceQuestion(wordEntry: WordEntry, allWords: W
     word: wordEntry.word,
     options,
     correctAnswer,
-    hint: `The word "${wordEntry.word}" ${isDefinitionQuestion ? 'is about' : 'means'} ${wordEntry.definition}`,
-    buzzySays: `Here is a clue: ${wordEntry.emoji} ${wordEntry.word} — "${wordEntry.definition}"`,
+    hint: `The word "${wordEntry.word}" means: ${wordEntry.definition}`,
+    buzzySays: `Clue: "${wordEntry.word}" — ${wordEntry.definition}`,
     wordEntry,
   };
 }
@@ -113,7 +114,7 @@ export function generateWordScrambleQuestion(wordEntry: WordEntry, _allWords: Wo
     options: [wordEntry.word],
     correctAnswer: wordEntry.word,
     hint: `The word has ${wordEntry.word.length} letters and means: ${wordEntry.definition}`,
-    buzzySays: `Unscramble these letters to make a word! Clue: it means "${wordEntry.definition}" ${wordEntry.emoji}`,
+    buzzySays: `Unscramble these letters! Clue: it means "${wordEntry.definition}"`,
     wordEntry,
   };
 }
@@ -128,55 +129,77 @@ export function generateSentenceBuilderQuestion(wordEntry: WordEntry, _allWords:
     type: 'sentenceBuilder',
     word: wordEntry.word,
     sentenceWords: shuffled,
-    options: words, // correct order
+    options: words,
     correctAnswer: words.join(' '),
-    hint: `The sentence uses the word "${wordEntry.word}". Build it from beginning to end.`,
-    buzzySays: `Put the words in the right order to make a proper sentence about "${wordEntry.word}"!`,
+    hint: `Build the sentence using the word "${wordEntry.word}".`,
+    buzzySays: `Put the words in order to make a sentence about "${wordEntry.word}"!`,
     wordEntry,
   };
 }
 
+/**
+ * Generate a question adapted for a given year band and accuracy level.
+ * Year 1–2: multiple choice / cloze only (simpler)
+ * Year 3–4: all types
+ * Year 5: prefer harder types
+ */
 export function generateQuestion(
   wordEntry: WordEntry,
   allWords: WordEntry[],
   preferredType?: QuestionType,
-  accuracy?: number
+  accuracy?: number,
+  yearBand?: YearBand
 ): Question {
-  // Adapt difficulty
   let type: QuestionType;
 
   if (preferredType && preferredType !== 'storyTwist') {
     type = preferredType;
-  } else if (accuracy !== undefined && accuracy < 0.6) {
-    // Struggling: use multiple choice (easiest)
-    type = 'multipleChoice';
-  } else if (accuracy !== undefined && accuracy > 0.8) {
-    // Excelling: use harder types
-    const harder: QuestionType[] = ['wordScramble', 'sentenceBuilder', 'cloze'];
-    type = harder[Math.floor(Math.random() * harder.length)];
   } else {
-    const types: QuestionType[] = ['cloze', 'multipleChoice', 'wordScramble', 'sentenceBuilder'];
-    type = types[Math.floor(Math.random() * types.length)];
+    const year = yearBand ?? wordEntry.yearBand;
+    if (year <= 2) {
+      // Simple: only multiple choice or cloze
+      type = Math.random() > 0.5 ? 'multipleChoice' : 'cloze';
+    } else if (year >= 5) {
+      // Complex: prefer harder types
+      if (accuracy !== undefined && accuracy > 0.8) {
+        const harder: QuestionType[] = ['wordScramble', 'sentenceBuilder', 'cloze'];
+        type = harder[Math.floor(Math.random() * harder.length)];
+      } else {
+        const all: QuestionType[] = ['cloze', 'multipleChoice', 'wordScramble', 'sentenceBuilder'];
+        type = all[Math.floor(Math.random() * all.length)];
+      }
+    } else {
+      // Year 3–4: adapt by accuracy
+      if (accuracy !== undefined && accuracy < 0.6) {
+        type = 'multipleChoice'; // Struggling — give easier
+      } else if (accuracy !== undefined && accuracy > 0.8) {
+        const harder: QuestionType[] = ['wordScramble', 'sentenceBuilder', 'cloze'];
+        type = harder[Math.floor(Math.random() * harder.length)];
+      } else {
+        const types: QuestionType[] = ['cloze', 'multipleChoice', 'wordScramble', 'sentenceBuilder'];
+        type = types[Math.floor(Math.random() * types.length)];
+      }
+    }
   }
 
   switch (type) {
-    case 'cloze':
-      return generateClozeQuestion(wordEntry, allWords);
-    case 'multipleChoice':
-      return generateMultipleChoiceQuestion(wordEntry, allWords);
-    case 'wordScramble':
-      return generateWordScrambleQuestion(wordEntry, allWords);
-    case 'sentenceBuilder':
-      return generateSentenceBuilderQuestion(wordEntry, allWords);
-    default:
-      return generateMultipleChoiceQuestion(wordEntry, allWords);
+    case 'cloze':          return generateClozeQuestion(wordEntry, allWords);
+    case 'multipleChoice': return generateMultipleChoiceQuestion(wordEntry, allWords);
+    case 'wordScramble':   return generateWordScrambleQuestion(wordEntry, allWords);
+    case 'sentenceBuilder':return generateSentenceBuilderQuestion(wordEntry, allWords);
+    default:               return generateMultipleChoiceQuestion(wordEntry, allWords);
   }
 }
 
+/**
+ * Generate questions for a chapter, adapting to accuracy and year band.
+ * Never repeats words until all target words are used.
+ */
 export function generateQuestionsForChapter(
   targetWords: string[],
   questionsNeeded: number,
-  accuracy?: number
+  accuracy?: number,
+  yearBand?: YearBand
 ): Question[] {
   const wordEntries = targetWords
     .map((w) => wordData.find((entry) => entry.word === w))
@@ -187,10 +210,13 @@ export function generateQuestionsForChapter(
   const questions: Question[] = [];
   const types: QuestionType[] = ['cloze', 'multipleChoice', 'wordScramble', 'sentenceBuilder'];
 
+  // Shuffle so we don't always ask about the same words first
+  const shuffledEntries = shuffle(wordEntries);
+
   for (let i = 0; i < questionsNeeded; i++) {
-    const wordEntry = wordEntries[i % wordEntries.length];
+    const wordEntry = shuffledEntries[i % shuffledEntries.length];
     const type = types[i % types.length];
-    questions.push(generateQuestion(wordEntry, wordData, type, accuracy));
+    questions.push(generateQuestion(wordEntry, wordData, type, accuracy, yearBand));
   }
 
   return questions;
