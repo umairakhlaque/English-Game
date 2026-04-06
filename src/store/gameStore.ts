@@ -1,8 +1,26 @@
 import { create } from 'zustand';
-import { Screen, YearBand, Question, DictionaryEntry, LevelProgress, GameStats } from '../types';
+import {
+  Screen,
+  YearBand,
+  Question,
+  DictionaryEntry,
+  LevelProgress,
+  GameStats,
+  PlayerProfile,
+  AvatarType,
+} from '../types';
 import { storyChapters } from '../data/story';
 import { generateQuestionsForChapter } from '../utils/questionEngine';
 import { wordData } from '../data/words';
+
+// Simple obfuscation — not cryptographic, just avoids plain text PIN
+function obfuscatePin(pin: string): string {
+  return btoa(pin.split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ (i + 7))).join(''));
+}
+
+export function verifyPin(pin: string, hash: string): boolean {
+  return obfuscatePin(pin) === hash;
+}
 
 interface GameState {
   // Navigation
@@ -10,9 +28,9 @@ interface GameState {
   currentChapterId: number;
   currentQuestionIndex: number;
 
-  // Player
-  playerName: string;
-  yearBand: YearBand;
+  // Registration / profile
+  profile: PlayerProfile;
+  isRegistered: boolean;
 
   // Scoring
   wordCoins: number;
@@ -34,18 +52,17 @@ interface GameState {
   levelProgress: Record<number, LevelProgress>;
   dictionary: DictionaryEntry[];
   knownWords: Set<string>;
+  usedWordIds: Set<string>;
 
   // Stats
   stats: GameStats;
 
-  // Unlocks
-  unlockedCostumes: string[];
-  currentCostume: string;
+  // Registration Actions
+  completeRegistration: (name: string, yearBand: YearBand, avatar: AvatarType, pin: string) => void;
+  updateProfile: (updates: Partial<PlayerProfile>) => void;
 
-  // Actions
+  // Game Actions
   setScreen: (screen: Screen) => void;
-  setPlayerName: (name: string) => void;
-  setYearBand: (year: YearBand) => void;
   startChapter: (chapterId: number) => void;
   nextQuestion: () => void;
   submitAnswer: (answer: string) => void;
@@ -58,9 +75,10 @@ interface GameState {
   loadFromStorage: () => void;
   saveToStorage: () => void;
   updateStats: (correct: boolean) => void;
+  resetProgress: () => void;
 }
 
-const STORAGE_KEY = 'wordquest_save';
+const STORAGE_KEY = 'wordquest_save_v2';
 
 const defaultStats: GameStats = {
   totalQuestionsAnswered: 0,
@@ -70,12 +88,20 @@ const defaultStats: GameStats = {
   sessionStartTime: Date.now(),
 };
 
+const defaultProfile: PlayerProfile = {
+  name: '',
+  yearBand: 1,
+  avatar: 'knight',
+  pinHash: '',
+  registered: false,
+};
+
 export const useGameStore = create<GameState>((set, get) => ({
   currentScreen: 'home',
   currentChapterId: 1,
   currentQuestionIndex: 0,
-  playerName: '',
-  yearBand: 2,
+  profile: defaultProfile,
+  isRegistered: false,
   wordCoins: 0,
   score: 0,
   streakDays: 1,
@@ -91,28 +117,46 @@ export const useGameStore = create<GameState>((set, get) => ({
   levelProgress: {},
   dictionary: [],
   knownWords: new Set(),
+  usedWordIds: new Set(),
   stats: defaultStats,
-  unlockedCostumes: ['default'],
-  currentCostume: 'default',
+
+  completeRegistration: (name, yearBand, avatar, pin) => {
+    const pinHash = obfuscatePin(pin);
+    const profile: PlayerProfile = { name, yearBand, avatar, pinHash, registered: true };
+    set({ profile, isRegistered: true });
+    get().saveToStorage();
+  },
+
+  updateProfile: (updates) => {
+    const profile = { ...get().profile, ...updates };
+    if (updates.pinHash === undefined && updates.pinHash !== '') {
+      // keep existing
+    }
+    set({ profile });
+    get().saveToStorage();
+  },
 
   setScreen: (screen) => {
     set({ currentScreen: screen });
     get().saveToStorage();
   },
 
-  setPlayerName: (name) => set({ playerName: name }),
-
-  setYearBand: (year) => set({ yearBand: year }),
-
   startChapter: (chapterId) => {
     const chapter = storyChapters.find((c) => c.id === chapterId);
     if (!chapter) return;
 
-    const accuracy = get().stats.totalQuestionsAnswered > 0
-      ? get().stats.totalCorrect / get().stats.totalQuestionsAnswered
-      : 0.7;
+    const { stats } = get();
+    const accuracy =
+      stats.totalQuestionsAnswered > 0
+        ? stats.totalCorrect / stats.totalQuestionsAnswered
+        : 0.7;
 
-    const questions = generateQuestionsForChapter(chapter.targetWords, 5, accuracy);
+    const questions = generateQuestionsForChapter(
+      chapter.targetWords,
+      5,
+      accuracy,
+      get().profile.yearBand
+    );
 
     set({
       currentChapterId: chapterId,
@@ -149,13 +193,16 @@ export const useGameStore = create<GameState>((set, get) => ({
     const question = currentQuestions[currentQuestionIndex];
     if (!question) return;
 
-    const isCorrect = answer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
+    const isCorrect =
+      answer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
 
     set({
       currentAnswerResult: isCorrect ? 'correct' : 'wrong',
       currentChosenAnswer: answer,
       chapterSessionTotal: get().chapterSessionTotal + 1,
-      chapterSessionCorrect: isCorrect ? get().chapterSessionCorrect + 1 : get().chapterSessionCorrect,
+      chapterSessionCorrect: isCorrect
+        ? get().chapterSessionCorrect + 1
+        : get().chapterSessionCorrect,
     });
 
     get().updateStats(isCorrect);
@@ -182,7 +229,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   completeChapter: () => {
     const { chapterSessionCorrect, chapterSessionTotal, currentChapterId, levelProgress } = get();
-    const accuracy = chapterSessionTotal > 0 ? chapterSessionCorrect / chapterSessionTotal : 0;
+    const accuracy =
+      chapterSessionTotal > 0 ? chapterSessionCorrect / chapterSessionTotal : 0;
 
     let stars = 1;
     if (accuracy >= 0.9) stars = 3;
@@ -206,7 +254,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   addWordToDictionary: (word) => {
-    const { dictionary, currentChapterId } = get();
+    const { dictionary } = get();
     const wordEntry = wordData.find((w: { word: string }) => w.word === word);
     if (!wordEntry) return;
 
@@ -218,7 +266,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       definition: wordEntry.definition,
       emoji: wordEntry.emoji,
       yearBand: wordEntry.yearBand,
-      learnedAt: currentChapterId,
+      learnedAt: get().currentChapterId,
       exampleSentence: wordEntry.exampleSentence,
     };
 
@@ -228,6 +276,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       dictionary: [...dictionary, newEntry],
       knownWords: newKnown,
+      stats: { ...get().stats, totalWordsLearned: get().stats.totalWordsLearned + 1 },
     });
   },
 
@@ -253,13 +302,39 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
+  resetProgress: () => {
+    const { profile } = get();
+    set({
+      wordCoins: 0,
+      score: 0,
+      levelProgress: {},
+      dictionary: [],
+      knownWords: new Set(),
+      usedWordIds: new Set(),
+      stats: { ...defaultStats, sessionStartTime: Date.now() },
+    });
+    // Keep profile/registration
+    const toSave = {
+      profile,
+      isRegistered: true,
+      wordCoins: 0,
+      score: 0,
+      streakDays: 1,
+      lastStreakDate: '',
+      levelProgress: {},
+      dictionary: [],
+      knownWords: [],
+      stats: defaultStats,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  },
+
   loadFromStorage: () => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       const saved = JSON.parse(raw);
 
-      // Update streak
       const today = new Date().toDateString();
       let streakDays = saved.streakDays ?? 1;
       if (saved.lastStreakDate) {
@@ -270,8 +345,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
 
       set({
-        playerName: saved.playerName ?? '',
-        yearBand: saved.yearBand ?? 2,
+        profile: saved.profile ?? defaultProfile,
+        isRegistered: saved.isRegistered ?? false,
         wordCoins: saved.wordCoins ?? 0,
         score: saved.score ?? 0,
         streakDays,
@@ -280,8 +355,6 @@ export const useGameStore = create<GameState>((set, get) => ({
         dictionary: saved.dictionary ?? [],
         knownWords: new Set(saved.knownWords ?? []),
         stats: { ...(saved.stats ?? defaultStats), sessionStartTime: Date.now() },
-        unlockedCostumes: saved.unlockedCostumes ?? ['default'],
-        currentCostume: saved.currentCostume ?? 'default',
       });
     } catch {
       // ignore corrupt storage
@@ -291,8 +364,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   saveToStorage: () => {
     const state = get();
     const toSave = {
-      playerName: state.playerName,
-      yearBand: state.yearBand,
+      profile: state.profile,
+      isRegistered: state.isRegistered,
       wordCoins: state.wordCoins,
       score: state.score,
       streakDays: state.streakDays,
@@ -301,8 +374,6 @@ export const useGameStore = create<GameState>((set, get) => ({
       dictionary: state.dictionary,
       knownWords: Array.from(state.knownWords),
       stats: state.stats,
-      unlockedCostumes: state.unlockedCostumes,
-      currentCostume: state.currentCostume,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
   },

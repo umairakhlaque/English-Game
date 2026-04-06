@@ -17,6 +17,8 @@ export type QuestionType =
   | 'sentenceBuilder'
   | 'storyTwist';
 
+export type AvatarType = 'knight' | 'wizard' | 'archer' | 'ninja';
+
 export interface WordEntry {
   word: string;
   definition: string;
@@ -86,4 +88,12 @@ export interface GameStats {
   totalWordsLearned: number;
   totalTimePlayed: number;
   sessionStartTime: number;
+}
+
+export interface PlayerProfile {
+  name: string;
+  yearBand: YearBand;
+  avatar: AvatarType;
+  pinHash: string;
+  registered: boolean;
 }
