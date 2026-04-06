@@ -25,7 +25,7 @@ const YEAR_DESCRIPTIONS: Record<YearBand, string> = {
 };
 
 export const HomeScreen: React.FC = () => {
-  const { isRegistered, profile, completeRegistration, setScreen, levelProgress, stats, wordCoins } = useGameStore();
+  const { isRegistered, profile, completeRegistration, setScreen, levelProgress, stats, wordCoins, logout } = useGameStore();
 
   const [step, setStep] = useState<RegistrationStep>('welcome');
   const [name, setName] = useState('');
@@ -118,6 +118,18 @@ export const HomeScreen: React.FC = () => {
               Parent Area
             </button>
           </div>
+
+          <button
+            className="btn btn-danger"
+            style={{ width: '100%', marginTop: 'var(--sp-xs)' }}
+            onClick={() => {
+              if (window.confirm(`Switch player? This will log out ${profile.name}. Progress is saved — they can log back in.`)) {
+                logout();
+              }
+            }}
+          >
+            🔄 Switch Player
+          </button>
         </div>
       </div>
     );

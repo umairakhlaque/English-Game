@@ -67,8 +67,8 @@ export function generateClozeQuestion(wordEntry: WordEntry, allWords: WordEntry[
     sentence,
     options,
     correctAnswer: wordEntry.word,
-    hint: `Think: ${wordEntry.definition}`,
-    buzzySays: `Psst! This word means "${wordEntry.definition}". Example: "${wordEntry.exampleSentence}"`,
+    hint: `Think about the meaning: "${wordEntry.definition}" 🤔`,
+    buzzySays: `Psst! The missing word means "${wordEntry.definition}". It starts with the letter "${wordEntry.word[0].toUpperCase()}"! 🐛`,
     wordEntry,
   };
 }
@@ -97,8 +97,12 @@ export function generateMultipleChoiceQuestion(wordEntry: WordEntry, allWords: W
     word: wordEntry.word,
     options,
     correctAnswer,
-    hint: `The word "${wordEntry.word}" means: ${wordEntry.definition}`,
-    buzzySays: `Clue: "${wordEntry.word}" — ${wordEntry.definition}`,
+    hint: isDefinitionQuestion
+      ? `Think about: "${wordEntry.definition}" 💡`
+      : `It starts with "${wordEntry.word[0].toUpperCase()}" and has ${wordEntry.word.length} letters! 💡`,
+    buzzySays: isDefinitionQuestion
+      ? `Buzzy says: look carefully at the word and think what it means! The definition has something to do with: "${wordEntry.definition.split(' ').slice(0, 3).join(' ')}..." 🐛`
+      : `Buzzy says: the answer starts with "${wordEntry.word[0].toUpperCase()}" and has ${wordEntry.word.length} letters! 🐛`,
     wordEntry,
   };
 }
@@ -113,8 +117,8 @@ export function generateWordScrambleQuestion(wordEntry: WordEntry, _allWords: Wo
     scrambled,
     options: [wordEntry.word],
     correctAnswer: wordEntry.word,
-    hint: `The word has ${wordEntry.word.length} letters and means: ${wordEntry.definition}`,
-    buzzySays: `Unscramble these letters! Clue: it means "${wordEntry.definition}"`,
+    hint: `The word has ${wordEntry.word.length} letters and means: "${wordEntry.definition}" 🔤`,
+    buzzySays: `Buzzy says: rearrange the letters to spell a word that means "${wordEntry.definition}"! First letter is "${wordEntry.word[0].toUpperCase()}" 🐛`,
     wordEntry,
   };
 }
@@ -131,8 +135,8 @@ export function generateSentenceBuilderQuestion(wordEntry: WordEntry, _allWords:
     sentenceWords: shuffled,
     options: words,
     correctAnswer: words.join(' '),
-    hint: `Build the sentence using the word "${wordEntry.word}".`,
-    buzzySays: `Put the words in order to make a sentence about "${wordEntry.word}"!`,
+    hint: `Put the words in the right order to make a proper sentence! 📝`,
+    buzzySays: `Buzzy says: start with who or what the sentence is about, then what they do! You can do it! 🐛`,
     wordEntry,
   };
 }

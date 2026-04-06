@@ -76,6 +76,7 @@ interface GameState {
   saveToStorage: () => void;
   updateStats: (correct: boolean) => void;
   resetProgress: () => void;
+  logout: () => void;
 }
 
 const STORAGE_KEY = 'wordquest_save_v2';
@@ -327,6 +328,28 @@ export const useGameStore = create<GameState>((set, get) => ({
       stats: defaultStats,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  },
+
+  logout: () => {
+    localStorage.removeItem(STORAGE_KEY);
+    set({
+      profile: defaultProfile,
+      isRegistered: false,
+      currentScreen: 'home',
+      wordCoins: 0,
+      score: 0,
+      streakDays: 1,
+      lastStreakDate: '',
+      levelProgress: {},
+      dictionary: [],
+      knownWords: new Set(),
+      usedWordIds: new Set(),
+      stats: { ...defaultStats, sessionStartTime: Date.now() },
+      currentQuestions: [],
+      currentAnswerResult: null,
+      currentChosenAnswer: '',
+      showBuzzyHint: false,
+    });
   },
 
   loadFromStorage: () => {
