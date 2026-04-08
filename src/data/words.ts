@@ -20,6 +20,21 @@ export const wordData: WordEntry[] = [
   { word: 'here', definition: 'in this place', emoji: '📍', yearBand: 1, exampleSentence: 'Come and sit here with me.' },
   { word: 'there', definition: 'in that place', emoji: '➡️', yearBand: 1, exampleSentence: 'The treasure is over there.' },
   { word: 'where', definition: 'in what place; asking about a location', emoji: '🗺️', yearBand: 1, exampleSentence: 'Where is my hat?' },
+  { word: 'go', definition: 'to move from one place to another', emoji: '🏃', yearBand: 1, exampleSentence: 'Go to bed now, it is late.' },
+  { word: 'do', definition: 'to perform an action', emoji: '✅', yearBand: 1, exampleSentence: 'Do your homework before playing.' },
+  { word: 'no', definition: 'the opposite of yes; a refusal', emoji: '🚫', yearBand: 1, exampleSentence: 'No, you cannot have more sweets.' },
+  { word: 'so', definition: 'therefore; to such a degree', emoji: '➡️', yearBand: 1, exampleSentence: 'It was so cold outside today.' },
+  { word: 'he', definition: 'used to refer to a male person', emoji: '👦', yearBand: 1, exampleSentence: 'He is my best friend.' },
+  { word: 'she', definition: 'used to refer to a female person', emoji: '👧', yearBand: 1, exampleSentence: 'She loves to read books.' },
+  { word: 'we', definition: 'used to refer to yourself and others', emoji: '👫', yearBand: 1, exampleSentence: 'We went to the park today.' },
+  { word: 'me', definition: 'used to refer to yourself', emoji: '👤', yearBand: 1, exampleSentence: 'Can you help me please?' },
+  { word: 'be', definition: 'to exist or have a quality', emoji: '⭐', yearBand: 1, exampleSentence: 'Be kind to everyone you meet.' },
+  { word: 'was', definition: 'past tense of is; existed in the past', emoji: '⏮️', yearBand: 1, exampleSentence: 'She was happy at the party.' },
+  { word: 'his', definition: 'belonging to him', emoji: '👦', yearBand: 1, exampleSentence: 'That is his red bicycle.' },
+  { word: 'has', definition: 'owns or possesses something', emoji: '🎒', yearBand: 1, exampleSentence: 'He has a big fluffy dog.' },
+  { word: 'put', definition: 'to place something somewhere', emoji: '📦', yearBand: 1, exampleSentence: 'Put the book on the shelf.' },
+  { word: 'ask', definition: 'to say a question to get information', emoji: '🙋', yearBand: 1, exampleSentence: 'Ask your teacher if you need help.' },
+  { word: 'one', definition: 'the number 1; a single thing', emoji: '1️⃣', yearBand: 1, exampleSentence: 'I have one sister and one brother.' },
 
   // Year 2
   { word: 'beautiful', definition: 'very pretty or pleasing to look at', emoji: '🌸', yearBand: 2, exampleSentence: 'The flowers are beautiful in spring.' },
@@ -42,6 +57,21 @@ export const wordData: WordEntry[] = [
   { word: 'whole', definition: 'all of something, with nothing missing', emoji: '⭕', yearBand: 2, exampleSentence: 'He ate the whole apple.' },
   { word: 'parents', definition: 'your mother and father', emoji: '👨‍👩‍👦', yearBand: 2, exampleSentence: 'My parents read me a bedtime story.' },
   { word: 'Christmas', definition: 'a holiday celebrated on 25th December', emoji: '🎄', yearBand: 2, exampleSentence: 'I got a book for Christmas.' },
+  { word: 'door', definition: 'a flat panel you open to enter a room', emoji: '🚪', yearBand: 2, exampleSentence: 'Please close the door behind you.' },
+  { word: 'floor', definition: 'the flat surface you walk on inside', emoji: '🟫', yearBand: 2, exampleSentence: 'The floor is very slippery today.' },
+  { word: 'find', definition: 'to discover something after looking', emoji: '🔍', yearBand: 2, exampleSentence: 'I cannot find my glasses anywhere.' },
+  { word: 'kind', definition: 'friendly and generous to others', emoji: '💝', yearBand: 2, exampleSentence: 'She was kind to the new pupil.' },
+  { word: 'mind', definition: 'the part of you that thinks and feels', emoji: '🧠', yearBand: 2, exampleSentence: 'Use your mind to solve the puzzle.' },
+  { word: 'child', definition: 'a young person; a boy or girl', emoji: '👧', yearBand: 2, exampleSentence: 'Every child deserves to go to school.' },
+  { word: 'most', definition: 'the greatest amount or number', emoji: '🏆', yearBand: 2, exampleSentence: 'Most children love playing outside.' },
+  { word: 'only', definition: 'no more than; just one', emoji: '1️⃣', yearBand: 2, exampleSentence: 'She is the only girl in the team.' },
+  { word: 'both', definition: 'two things or people together', emoji: '👫', yearBand: 2, exampleSentence: 'Both players scored a goal.' },
+  { word: 'gold', definition: 'a shiny yellow precious metal', emoji: '🥇', yearBand: 2, exampleSentence: 'The ring is made of gold.' },
+  { word: 'told', definition: 'past tense of tell; shared information', emoji: '💬', yearBand: 2, exampleSentence: 'She told me a funny story.' },
+  { word: 'cold', definition: 'having a low temperature; not warm', emoji: '🥶', yearBand: 2, exampleSentence: 'It was very cold outside in winter.' },
+  { word: 'hour', definition: 'a period of sixty minutes', emoji: '⏰', yearBand: 2, exampleSentence: 'We waited for an hour at the bus stop.' },
+  { word: 'move', definition: 'to change position or place', emoji: '🚶', yearBand: 2, exampleSentence: 'Move your chair closer to the table.' },
+  { word: 'sure', definition: 'certain; having no doubt', emoji: '✅', yearBand: 2, exampleSentence: 'Are you sure that is the right answer?' },
 
   // Year 3
   { word: 'accident', definition: 'something bad that happens without being planned', emoji: '⚠️', yearBand: 3, exampleSentence: 'He broke the cup by accident.' },
@@ -105,6 +135,16 @@ export const wordData: WordEntry[] = [
   { word: 'through', definition: 'moving from one side to the other', emoji: '🚪', yearBand: 3, exampleSentence: 'The fox ran through the forest.' },
   { word: 'thought', definition: 'past tense of think; an idea in your mind', emoji: '💭', yearBand: 3, exampleSentence: 'She thought about the problem all day.' },
   { word: 'weight', definition: 'how heavy something is', emoji: '⚖️', yearBand: 3, exampleSentence: 'What is the weight of the elephant?' },
+  { word: 'breath', definition: 'the air you take in and breathe out', emoji: '💨', yearBand: 3, exampleSentence: 'Take a deep breath before you begin.' },
+  { word: 'circle', definition: 'a perfectly round flat shape', emoji: '⭕', yearBand: 3, exampleSentence: 'Draw a circle in the middle of the page.' },
+  { word: 'consider', definition: 'to think carefully about something', emoji: '🤔', yearBand: 3, exampleSentence: 'Consider all the options before deciding.' },
+  { word: 'continue', definition: 'to keep going without stopping', emoji: '▶️', yearBand: 3, exampleSentence: 'Continue reading until the end of the chapter.' },
+  { word: 'experiment', definition: 'a test done to find out something', emoji: '🔬', yearBand: 3, exampleSentence: 'We did a science experiment with water.' },
+  { word: 'extreme', definition: 'very great or intense', emoji: '🔥', yearBand: 3, exampleSentence: 'The weather was extreme during the storm.' },
+  { word: 'fruit', definition: 'a sweet food that grows on plants or trees', emoji: '🍎', yearBand: 3, exampleSentence: 'Apples and oranges are types of fruit.' },
+  { word: 'group', definition: 'a number of things or people together', emoji: '👥', yearBand: 3, exampleSentence: 'Work in a group with your classmates.' },
+  { word: 'heard', definition: 'past tense of hear; received sound', emoji: '👂', yearBand: 3, exampleSentence: 'I heard a loud noise outside.' },
+  { word: 'increase', definition: 'to become larger or more in number', emoji: '📈', yearBand: 3, exampleSentence: 'The number of birds has started to increase.' },
 
   // Year 4
   { word: 'accommodate', definition: 'to provide space or room for someone', emoji: '🏨', yearBand: 4, exampleSentence: 'The hotel can accommodate 200 guests.' },
@@ -155,6 +195,16 @@ export const wordData: WordEntry[] = [
   { word: 'variety', definition: 'a number of different types of something', emoji: '🎨', yearBand: 4, exampleSentence: 'The market sells a variety of fruits.' },
   { word: 'vegetable', definition: 'a plant or part of a plant eaten as food', emoji: '🥦', yearBand: 4, exampleSentence: 'Carrots are a healthy vegetable.' },
   { word: 'vehicle', definition: 'a machine used for transport', emoji: '🚗', yearBand: 4, exampleSentence: 'A car is a type of vehicle.' },
+  { word: 'accompany', definition: 'to go somewhere with someone', emoji: '🤝', yearBand: 4, exampleSentence: 'I will accompany you to the doctor.' },
+  { word: 'amateur', definition: 'someone who does something for fun, not paid', emoji: '🎯', yearBand: 4, exampleSentence: 'He is an amateur photographer.' },
+  { word: 'apparent', definition: 'clearly seen or understood', emoji: '👁️', yearBand: 4, exampleSentence: 'It was apparent she was upset.' },
+  { word: 'attached', definition: 'joined or connected to something', emoji: '🔗', yearBand: 4, exampleSentence: 'The key is attached to the lanyard.' },
+  { word: 'available', definition: 'able to be used or obtained', emoji: '✅', yearBand: 4, exampleSentence: 'Is the book available at the library?' },
+  { word: 'awkward', definition: 'clumsy; not smooth or comfortable', emoji: '😬', yearBand: 4, exampleSentence: 'It was an awkward silence in the room.' },
+  { word: 'bruise', definition: 'a mark on skin from a knock or bump', emoji: '🩹', yearBand: 4, exampleSentence: 'She had a bruise on her knee.' },
+  { word: 'cemetery', definition: 'a place where dead people are buried', emoji: '⚰️', yearBand: 4, exampleSentence: 'The old cemetery was very quiet.' },
+  { word: 'conscious', definition: 'aware of your surroundings; awake', emoji: '👁️', yearBand: 4, exampleSentence: 'He was conscious of the noise around him.' },
+  { word: 'convenience', definition: 'something that is easy and saves time', emoji: '⚡', yearBand: 4, exampleSentence: 'The shop nearby is a great convenience.' },
 
   // Year 5
   { word: 'controversy', definition: 'a disagreement about an important topic', emoji: '⚖️', yearBand: 5, exampleSentence: 'The decision caused a great controversy.' },
@@ -184,6 +234,19 @@ export const wordData: WordEntry[] = [
   { word: 'thorough', definition: 'complete and careful; covering everything', emoji: '🔬', yearBand: 5, exampleSentence: 'The detective did a thorough search.' },
   { word: 'twelfth', definition: 'the position after eleventh; 12th', emoji: '1️⃣2️⃣', yearBand: 5, exampleSentence: 'December is the twelfth month of the year.' },
   { word: 'yacht', definition: 'a large sailing or motor boat', emoji: '⛵', yearBand: 5, exampleSentence: 'The yacht sailed across the ocean.' },
+  { word: 'accommodate', definition: 'to provide space or fit someone in', emoji: '🏨', yearBand: 5, exampleSentence: 'The hall can accommodate 500 people.' },
+  { word: 'aggressive', definition: 'behaving in a hostile or forceful way', emoji: '😠', yearBand: 5, exampleSentence: 'The aggressive dog barked at everyone.' },
+  { word: 'ancient', definition: 'very old; belonging to the distant past', emoji: '🏛️', yearBand: 5, exampleSentence: 'The ancient ruins were thousands of years old.' },
+  { word: 'appreciate', definition: 'to recognise the value of something', emoji: '🙏', yearBand: 5, exampleSentence: 'I appreciate everything you have done.' },
+  { word: 'correspond', definition: 'to match or communicate by letter', emoji: '✉️', yearBand: 5, exampleSentence: 'The two stories correspond closely.' },
+  { word: 'criticise', definition: 'to point out faults in something', emoji: '🗣️', yearBand: 5, exampleSentence: 'It is not helpful to criticise without reason.' },
+  { word: 'desperate', definition: 'having a great need or feeling hopeless', emoji: '😰', yearBand: 5, exampleSentence: 'The explorer was desperate for water.' },
+  { word: 'determined', definition: 'firmly decided to do something', emoji: '💪', yearBand: 5, exampleSentence: 'She was determined to win the race.' },
+  { word: 'frequently', definition: 'happening often; many times', emoji: '🔁', yearBand: 5, exampleSentence: 'She frequently visits the library.' },
+  { word: 'government', definition: 'the group of people who rule a country', emoji: '🏛️', yearBand: 5, exampleSentence: 'The government passed a new law.' },
+  { word: 'marvellous', definition: 'causing wonder and delight; amazing', emoji: '🤩', yearBand: 5, exampleSentence: 'What a marvellous adventure we had!' },
+  { word: 'parliament', definition: 'the elected body that makes laws', emoji: '🏛️', yearBand: 5, exampleSentence: 'Parliament debated the new bill.' },
+  { word: 'temperature', definition: 'how hot or cold something is', emoji: '🌡️', yearBand: 5, exampleSentence: 'The temperature dropped below zero.' },
 ];
 
 export const getWordsByYear = (year: YearBand): WordEntry[] =>
@@ -202,3 +265,51 @@ export const getRandomWords = (count: number, excludeWords: string[] = [], year?
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 };
+
+// ── Weekly word rotation ─────────────────────────────────────
+// Returns the ISO week number for a given date
+function getISOWeek(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}
+
+// Deterministic shuffle using a numeric seed (LCG algorithm)
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const result = [...arr];
+  let s = seed;
+  for (let i = result.length - 1; i > 0; i--) {
+    s = Math.abs((s * 1664525 + 1013904223) & 0x7fffffff);
+    const j = s % (i + 1);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+/**
+ * Returns 20 words for the current ISO week for a given year band.
+ * The selection changes every Monday and is consistent across all devices.
+ * After cycling through all words it wraps around ensuring variety.
+ */
+export function getWeeklyWords(yearBand: YearBand): WordEntry[] {
+  const now = new Date();
+  const week = getISOWeek(now);
+  const year = now.getFullYear();
+  // Unique seed per year+week+yearBand — ensures different words each week
+  const seed = year * 10000 + week * 10 + yearBand;
+
+  const pool = wordData.filter((w) => w.yearBand === yearBand);
+  const shuffled = seededShuffle(pool, seed);
+  return shuffled.slice(0, Math.min(20, shuffled.length));
+}
+
+/**
+ * Returns how many days until the next Monday (when words refresh).
+ */
+export function getDaysUntilRefresh(): number {
+  const today = new Date().getDay(); // 0=Sun, 1=Mon ... 6=Sat
+  const daysUntilMonday = today === 1 ? 7 : (8 - today) % 7;
+  return daysUntilMonday === 0 ? 7 : daysUntilMonday;
+}

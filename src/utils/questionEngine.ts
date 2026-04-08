@@ -1,5 +1,5 @@
 import { WordEntry, Question, QuestionType, YearBand } from '../types';
-import { wordData } from '../data/words';
+import { wordData, getWeeklyWords } from '../data/words';
 
 let questionIdCounter = 0;
 const nextId = () => `q_${++questionIdCounter}_${Date.now()}`;
@@ -216,13 +216,16 @@ export function generateQuestionsForChapter(
   const questions: Question[] = [];
   const types: QuestionType[] = ['cloze', 'multipleChoice', 'wordScramble', 'sentenceBuilder'];
 
+  // Use weekly word pool for distractors if yearBand is provided, otherwise fall back to wordData
+  const pool = yearBand ? getWeeklyWords(yearBand) : wordData;
+
   // Shuffle so we don't always ask about the same words first
   const shuffledEntries = shuffle(wordEntries);
 
   for (let i = 0; i < questionsNeeded; i++) {
     const wordEntry = shuffledEntries[i % shuffledEntries.length];
     const type = types[i % types.length];
-    questions.push(generateQuestion(wordEntry, wordData, type, accuracy, yearBand));
+    questions.push(generateQuestion(wordEntry, pool, type, accuracy, yearBand));
   }
 
   return questions;
